@@ -6,7 +6,7 @@ Static chat UI (`index.html`) and a Pages Function at **`/api/chat`** (`function
 
 ### Option A — Git integration (recommended)
 
-1. Push this repo to GitHub (or GitLab).
+1. Push this repo to GitHub (or GitLab). This project’s source is at `https://github.com/dvmrhjn/ai4senior`.
 2. In [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
 3. Select the repo. Configure the build:
    - **Framework preset:** None
