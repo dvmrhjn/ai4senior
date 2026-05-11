@@ -1,7 +1,7 @@
 {
   "name": "ai4seniors-wizard",
   "private": true,
-  "description": "AI4Seniors Wizard — static UI + Cloudflare Pages Function for Claude",
+  "description": "AI4Seniors Wizard — static UI + /api/chat for Cloudflare Pages or Vercel",
   "scripts": {
     "dev": "wrangler pages dev .",
     "deploy": "wrangler pages deploy . --project-name=ai4seniors-wizard"

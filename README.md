@@ -1,6 +1,19 @@
 # AI4Seniors Wizard
 
-Static chat UI (`index.html`) and a Pages Function at **`/api/chat`** (`functions/api/chat.js`) that proxies requests to Anthropic’s Messages API using the **`ANTHROPIC_API_KEY`** secret (never exposed to the browser).
+Static chat UI (`index.html`) and **`/api/chat`** implemented twice so you can deploy on **Cloudflare Pages** or **Vercel**:
+
+- **Cloudflare Pages:** `functions/api/chat.js` (reads `env.ANTHROPIC_API_KEY`)
+- **Vercel:** `api/chat.js` (reads `process.env.ANTHROPIC_API_KEY`)
+
+The browser always calls **`POST /api/chat`** (same path on both hosts).
+
+## Deploy to Vercel
+
+1. Import the Git repo in the [Vercel dashboard](https://vercel.com/) (framework: **Other**, or leave defaults; no build step required if the root is static files + `/api`).
+2. **Environment variables** → Production (and Preview if needed): add **`ANTHROPIC_API_KEY`** with your Anthropic API key.
+3. Deploy. `api/chat.js` is served as **`/api/chat`**.
+
+If chat still **404**s, confirm the deployment includes the **`api/`** folder and that you redeployed after adding the file. Do not use a catch‑all rewrite that sends `/api/*` to `index.html`.
 
 ## Deploy to Cloudflare Pages
 
@@ -63,7 +76,7 @@ ANTHROPIC_API_KEY=sk-ant-api03-...
 | Symptom | What to check |
 |--------|----------------|
 | Chat always shows an error about **ANTHROPIC_API_KEY** | In Pages → your project → **Settings** → **Variables and Secrets**, confirm the secret name is exactly `ANTHROPIC_API_KEY` (same spelling as in `functions/api/chat.js`). Redeploy after adding or renaming. |
-| **404** on `/api/chat` | Confirm `functions/api/chat.js` exists and the deployed branch includes the `functions/` folder. Root-only uploads without `functions/` will not serve the API. |
+| **404** on `/api/chat` | **Cloudflare:** `functions/api/chat.js` must be in the repo you deploy. **Vercel:** use root `api/chat.js` (not `functions/api/`). Redeploy after adding either file. |
 | **CORS** errors | The function allows `*` for this app’s same-origin use. If you call the API from another origin, extend `Access-Control-Allow-Headers` in `chat.js` as needed. |
 | **Invalid model** or 400 from Anthropic | The UI uses `claude-sonnet-4-6` in `index.html`. If your account does not have access, change the `model` field in the `fetch` body to a model your key supports (see [Anthropic model docs](https://docs.anthropic.com/en/docs/about-claude/models)). |
 | Broken logo | Add `AI4seniors_logo_1.png` next to `index.html`, or rely on the built-in title fallback when the image is missing. |
@@ -76,4 +89,5 @@ ANTHROPIC_API_KEY=sk-ant-api03-...
 ## Repo layout
 
 - `index.html` — UI and client logic (`POST /api/chat` with JSON body for Anthropic Messages API).
-- `functions/api/chat.js` — Worker: forwards JSON to `https://api.anthropic.com/v1/messages` with `env.ANTHROPIC_API_KEY`.
+- `functions/api/chat.js` — Cloudflare Pages Function → Anthropic.
+- `api/chat.js` — Vercel Serverless Function → Anthropic (same HTTP contract).
