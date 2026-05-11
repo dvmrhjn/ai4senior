@@ -27,6 +27,11 @@ Requires [Node.js](https://nodejs.org/) (includes `npm`).
 ```bash
 npm install
 npx wrangler login
+```
+
+`wrangler login` opens a browser once to authorize this machine. Then:
+
+```bash
 npx wrangler pages deploy . --project-name=ai4seniors-wizard
 ```
 
