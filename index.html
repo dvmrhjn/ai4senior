@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AI4Seniors Wizard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:wght@500;600&display=swap');
+
+  :root {
+    --bg: #FFF8F0;
+    --card: #FFFFFF;
+    --primary: #2E7D6B;
+    --primary-light: #E8F5F2;
+    --accent: #F4845F;
+    --accent-light: #FEF0EB;
+    --text: #1A2E2A;
+    --subtext: #5A7A74;
+    --border: #D4E8E3;
+    --shadow: 0 4px 20px rgba(46,125,107,0.12);
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 20px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--primary);
+    padding: 20px 24px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  .header h1 {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .header p {
+    color: rgba(255,255,255,0.85);
+    font-size: 16px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+
+  /* MAIN CONTENT */
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+
+  /* CATEGORY TILES */
+  .section-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 14px;
+    padding-left: 4px;
+  }
+
+  .categories {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .cat-btn {
+    background: var(--card);
+    border: 2.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cat-btn:hover, .cat-btn:active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(46,125,107,0.18);
+  }
+
+  .cat-btn.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  .cat-icon {
+    font-size: 42px;
+    line-height: 1;
+  }
+
+  .cat-label {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  /* ASK AREA */
+  .ask-area {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 2.5px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .ask-label {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .question-input {
+    width: 100%;
+    border: 2.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 20px;
+    font-family: 'Nunito', sans-serif;
+    resize: vertical;
+    min-height: 100px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    font-weight: 600;
+  }
+
+  .question-input:focus {
+    border-color: var(--primary);
+    background: white;
+  }
+
+  .question-input::placeholder {
+    color: #9BB5B0;
+    font-weight: 600;
+  }
+
+  /* BUTTONS ROW */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .mic-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 14px;
+    width: 66px;
+    height: 66px;
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(244,132,95,0.35);
+    transition: all 0.15s;
+  }
+
+  .mic-btn:hover { transform: scale(1.05); }
+  .mic-btn.recording {
+    background: #e53e3e;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(229,62,62,0.5); }
+    50% { box-shadow: 0 0 0 12px rgba(229,62,62,0); }
+  }
+
+  .ask-btn {
+    flex: 1;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 22px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    padding: 16px;
+    transition: all 0.15s;
+    box-shadow: 0 4px 14px rgba(46,125,107,0.3);
+  }
+
+  .ask-btn:hover { background: #256657; transform: translateY(-1px); }
+  .ask-btn:disabled { background: #9BB5B0; cursor: not-allowed; transform: none; }
+
+  /* ANSWER AREA */
+  .answer-area {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 2.5px solid var(--border);
+    display: none;
+    margin-bottom: 20px;
+  }
+
+  .answer-area.visible { display: block; }
+
+  .answer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .answer-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .answer-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .action-btn {
+    background: var(--primary-light);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    color: var(--primary);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .action-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .answer-text {
+    font-size: 20px;
+    line-height: 1.7;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .answer-text ul {
+    padding-left: 24px;
+    margin: 10px 0;
+  }
+
+  .answer-text li {
+    margin-bottom: 8px;
+  }
+
+  .answer-text strong {
+    color: var(--primary);
+  }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    background: var(--accent-light);
+    border: 2px solid #F4C5B0;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 16px;
+    color: #8B4513;
+    margin-top: 14px;
+    font-weight: 700;
+    display: none;
+  }
+
+  .disclaimer.visible { display: block; }
+
+  /* LOADING */
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--subtext);
+  }
+
+  .loading.visible { display: block; }
+
+  .spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 5px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* EMERGENCY */
+  .emergency-strip {
+    background: #e53e3e;
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(229,62,62,0.25);
+  }
+
+  .emergency-strip .icon { font-size: 32px; }
+
+  .emergency-strip .text {
+    color: white;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .emergency-strip .text span {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+
+  /* TEXT SIZE CONTROLS */
+  .size-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 20px;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--border);
+  }
+
+  .size-label { font-size: 16px; font-weight: 700; color: var(--subtext); }
+
+  .size-btn {
+    background: var(--primary-light);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .size-btn:hover { background: var(--primary); color: white; }
+
+  /* CLEAR BTN */
+  .clear-btn {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: 2.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--subtext);
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 10px;
+  }
+
+  .clear-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* PRINT */
+  @media print {
+    .header, .categories, .ask-area, .size-controls, .emergency-strip, .clear-btn, .answer-actions, .btn-row { display: none !important; }
+    .answer-area { display: block !important; border: 2px solid #ccc; }
+    body { font-size: 18pt; background: white; }
+  }
+
+  /* iPad optimizations */
+  @media (min-width: 600px) {
+    body { font-size: 22px; }
+    .categories { grid-template-columns: repeat(3, 1fr); }
+    .cat-btn { padding: 26px 18px; }
+    .cat-icon { font-size: 48px; }
+    .cat-label { font-size: 18px; }
+    .container { padding: 28px 24px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="AI4seniors_logo_1.png" alt="AI4Seniors.info" style="height: 64px; width: auto; margin-bottom: 4px;">
+  <p style="color:rgba(255,255,255,0.85); font-size:15px; font-weight:600;">Smarter Tech. Better Life.</p>
+</div>
+
+<div class="container">
+
+  <!-- TEXT SIZE -->
+  <div class="size-controls">
+    <span class="size-label">Text Size:</span>
+    <button class="size-btn" onclick="changeSize(-1)" title="Smaller">A-</button>
+    <button class="size-btn" onclick="changeSize(1)" title="Bigger">A+</button>
+  </div>
+
+  <!-- EMERGENCY -->
+  <div class="emergency-strip" onclick="window.location='tel:911'">
+    <span class="icon">🚨</span>
+    <div class="text">Emergency Help
+      <span>Tap to call 911 — for real emergencies only</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="section-title">📌 What do you need help with?</div>
+  <div class="categories">
+    <button class="cat-btn" onclick="selectCategory(this, '💊 Medications & Health', 'Help me understand medications, symptoms, or health topics in plain, easy language. Always remind me to consult my doctor.')">
+      <span class="cat-icon">💊</span>
+      <span class="cat-label">Medications &amp; Health</span>
+    </button>
+    <button class="cat-btn" onclick="selectCategory(this, '📋 Government & Benefits', 'Help seniors understand government programs, Medicare, Social Security, and benefits in simple language.')">
+      <span class="cat-icon">📋</span>
+      <span class="cat-label">Government &amp; Benefits</span>
+    </button>
+    <button class="cat-btn" onclick="selectCategory(this, '🍽️ Recipes & Cooking', 'Give simple, easy-to-follow recipes and cooking tips with large clear steps.')">
+      <span class="cat-icon">🍽️</span>
+      <span class="cat-label">Recipes &amp; Cooking</span>
+    </button>
+    <button class="cat-btn" onclick="selectCategory(this, '✉️ Help Writing', 'Help write clear, friendly letters or emails in simple language.')">
+      <span class="cat-icon">✉️</span>
+      <span class="cat-label">Help Writing</span>
+    </button>
+    <button class="cat-btn" onclick="selectCategory(this, '📱 Tech Help', 'Explain technology in very simple, step-by-step language for seniors with no technical background.')">
+      <span class="cat-icon">📱</span>
+      <span class="cat-label">Tech Help</span>
+    </button>
+    <button class="cat-btn" onclick="selectCategory(this, '🧠 General Question', 'Answer any question clearly and helpfully for a senior citizen.')">
+      <span class="cat-icon">🧠</span>
+      <span class="cat-label">Just Ask Anything</span>
+    </button>
+  </div>
+
+  <!-- ASK AREA -->
+  <div class="ask-area">
+    <div class="ask-label">✏️ Type or speak your question:</div>
+    <textarea
+      class="question-input"
+      id="questionInput"
+      placeholder="Example: What does ibuprofen do? or How do I apply for Medicare?"
+    ></textarea>
+    <div class="btn-row">
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="Tap to speak">🎙️</button>
+      <button class="ask-btn" id="askBtn" onclick="askQuestion()">Get My Answer ➜</button>
+    </div>
+    <div id="micStatus" style="margin-top:8px; font-size:16px; color:#e53e3e; font-weight:700; display:none;"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div><br>
+    Finding your answer... just a moment!
+  </div>
+
+  <!-- ANSWER -->
+  <div class="answer-area" id="answerArea">
+    <div class="answer-header">
+      <div class="answer-title">✅ Here's Your Answer</div>
+      <div class="answer-actions">
+        <button class="action-btn" onclick="speakAnswer()" id="speakBtn">🔊 Read Aloud</button>
+        <button class="action-btn" onclick="window.print()">🖨️ Print</button>
+      </div>
+    </div>
+    <div class="answer-text" id="answerText"></div>
+    <div class="disclaimer" id="disclaimer">
+      ⚠️ <strong>Important:</strong> This is general information only. Always check with your doctor, pharmacist, or a trusted professional before making health or financial decisions.
+    </div>
+  </div>
+
+  <!-- CLEAR -->
+  <button class="clear-btn" onclick="clearAll()">🔄 Start Over / Ask Another Question</button>
+
+</div>
+
+<script>
+  let selectedCategory = 'General Question';
+  let selectedContext = 'Answer any question clearly and helpfully for a senior citizen.';
+  let speaking = false;
+  let recognition = null;
+  let isRecording = false;
+
+  // Font size control
+  let baseFontSize = 20;
+  function changeSize(delta) {
+    baseFontSize = Math.max(16, Math.min(30, baseFontSize + delta * 2));
+    document.body.style.fontSize = baseFontSize + 'px';
+  }
+
+  // Category selection
+  function selectCategory(btn, name, context) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedCategory = name;
+    selectedContext = context;
+    document.getElementById('questionInput').placeholder = 'Ask about ' + name + '...';
+    document.getElementById('questionInput').focus();
+  }
+
+  // Voice recognition
+  function toggleMic() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Voice input is not supported on this browser. Please type your question.');
+      return;
+    }
+
+    if (isRecording) {
+      recognition.stop();
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      isRecording = true;
+      document.getElementById('micBtn').classList.add('recording');
+      document.getElementById('micBtn').textContent = '⏹️';
+      document.getElementById('micStatus').style.display = 'block';
+      document.getElementById('micStatus').textContent = '🎙️ Listening... speak now!';
+    };
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      document.getElementById('questionInput').value = transcript;
+    };
+
+    recognition.onend = () => {
+      isRecording = false;
+      document.getElementById('micBtn').classList.remove('recording');
+      document.getElementById('micBtn').textContent = '🎙️';
+      document.getElementById('micStatus').style.display = 'none';
+    };
+
+    recognition.onerror = () => {
+      isRecording = false;
+      document.getElementById('micBtn').classList.remove('recording');
+      document.getElementById('micBtn').textContent = '🎙️';
+      document.getElementById('micStatus').style.display = 'none';
+    };
+
+    recognition.start();
+  }
+
+  // Ask question via Claude API
+  async function askQuestion() {
+    const question = document.getElementById('questionInput').value.trim();
+    if (!question) {
+      alert('Please type or speak your question first!');
+      return;
+    }
+
+
+    document.getElementById('askBtn').disabled = true;
+    document.getElementById('loading').classList.add('visible');
+    document.getElementById('answerArea').classList.remove('visible');
+    window.speechSynthesis.cancel();
+
+    const systemPrompt = `You are a warm, patient assistant helping senior citizens. ${selectedContext}
+
+RULES:
+- Use very simple, clear language (no jargon)
+- Keep answers short and easy to read
+- Use short bullet points when listing things
+- Use bold for the most important words
+- Be warm, friendly, and encouraging
+- If health-related, remind them to consult their doctor
+- Never be condescending
+- Format nicely with line breaks for readability
+- Respond in HTML-friendly format using <strong>, <ul>, <li>, and <br> tags where helpful`;
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: question }]
+        })
+      });
+
+      const data = await response.json();
+      const answer = data.content && data.content[0] ? data.content[0].text : 'Sorry, I could not get an answer. Please try again.';
+
+      document.getElementById('answerText').innerHTML = answer;
+
+      const isHealth = selectedCategory.includes('Health') || selectedCategory.includes('Med');
+      document.getElementById('disclaimer').className = isHealth ? 'disclaimer visible' : 'disclaimer';
+
+      document.getElementById('answerArea').classList.add('visible');
+      document.getElementById('answerArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch (err) {
+      console.error('API Error:', err);
+      document.getElementById('answerText').innerHTML = '<strong>Oops!</strong> Something went wrong. Error: ' + err.message + '. Please check your internet connection and try again.';
+      document.getElementById('answerArea').classList.add('visible');
+    }
+
+    document.getElementById('loading').classList.remove('visible');
+    document.getElementById('askBtn').disabled = false;
+  }
+
+  // Text-to-speech
+  function speakAnswer() {
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      speaking = false;
+      document.getElementById('speakBtn').textContent = '🔊 Read Aloud';
+      return;
+    }
+
+    const text = document.getElementById('answerText').innerText;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.85;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    utterance.onend = () => {
+      speaking = false;
+      document.getElementById('speakBtn').textContent = '🔊 Read Aloud';
+    };
+
+    speaking = true;
+    document.getElementById('speakBtn').textContent = '⏹️ Stop Reading';
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Clear everything
+  function clearAll() {
+    window.speechSynthesis.cancel();
+    speaking = false;
+    document.getElementById('speakBtn').textContent = '🔊 Read Aloud';
+    document.getElementById('questionInput').value = '';
+    document.getElementById('answerArea').classList.remove('visible');
+    document.getElementById('loading').classList.remove('visible');
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+    selectedCategory = 'General Question';
+    selectedContext = 'Answer any question clearly and helpfully for a senior citizen.';
+    document.getElementById('questionInput').placeholder = 'Example: What does ibuprofen do? or How do I apply for Medicare?';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Allow Enter key to submit
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('questionInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        askQuestion();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
