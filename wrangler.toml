@@ -1,0 +1,4 @@
+# Cloudflare Pages — build output is this repo root (index.html + /functions).
+name = "ai4seniors-wizard"
+pages_build_output_dir = "."
+compatibility_date = "2025-05-01"

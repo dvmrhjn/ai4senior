@@ -1,0 +1,12 @@
+{
+  "name": "ai4seniors-wizard",
+  "private": true,
+  "description": "AI4Seniors Wizard — static UI + Cloudflare Pages Function for Claude",
+  "scripts": {
+    "dev": "wrangler pages dev .",
+    "deploy": "wrangler pages deploy . --project-name=ai4seniors-wizard"
+  },
+  "devDependencies": {
+    "wrangler": "^4.14.0"
+  }
+}
